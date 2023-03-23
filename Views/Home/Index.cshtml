@@ -1,0 +1,82 @@
+﻿@model List<Book>
+@{
+    ViewData["Title"] = "Kitaplar";
+}
+
+<table id="bookDataTable" class="display" cellspacing="0" width="100%">
+    <thead>
+        
+    </thead>
+
+    <tfoot>
+       
+    </tfoot>
+
+    <tbody id="bookDataTableBody">
+        
+    </tbody>
+</table>
+
+<div id="createCustomerContainer">
+    @Html.Partial("CreateCustomerView", new Customer())
+</div>
+
+@section Scripts{
+
+  <script>
+    var bookData = [];
+
+        @{
+        foreach (Book book in Model)
+        {
+            var buttonsHtml = "";
+
+            
+
+        if (book.IsCheckedOut)
+        {
+                    buttonsHtml += "<button id='btnCheckIn' class='btn btn-primary'>Check-IN</button><button id='btnDetails' class='btn btn-primary'>Detay</button>";
+        }
+        else
+        {
+                    buttonsHtml += "<button id='btnCheckOut' class='btn btn-primary'>Check-OUT</button>";
+        }
+                @:bookData.push(["@book.Title", "@book.PublishDate", "@book.Price".toString(), "@Html.Raw(buttonsHtml)"]);
+        
+        }
+    }
+
+    $(document).ready(function () {
+        $('#bookDataTable').DataTable({
+            data: bookData,
+            columns: [
+                { title: 'Kitap Adı' },
+                { title: 'Yayın Yılı' },
+                { title: 'Fiyat' },
+                { title: 'İşlemler' },
+            ],
+            responsive: true
+        });
+               $('#telId').mask('+90 000 000 00 00');
+
+               $('#createCustomerForm').submit(function (e) {
+                e.preventDefault();
+                $.ajax({
+                    url: '/Customer/CreateCustomer',
+                    type: 'POST',
+                    data: $(this).serialize(),
+                    success: function (data) {
+                        console.log(data);
+                    },
+                    error: function (error) {
+                        console.log(error);
+                    }
+                });
+            });
+    });
+
+       
+
+</script>
+    
+}

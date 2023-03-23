@@ -1,0 +1,65 @@
+﻿@model Checkout
+
+@{
+    var bookid = ViewBag.BookId;
+}
+<h2>Checkout Book</h2>
+
+<form asp-action="CreateCheckout">
+    <div class="form-group">
+        <label asp-for="Book" class="control-label">Selected Book:</label>
+        <input class="form-control" id="book-select" disabled>
+        <input asp-for="BookId" class="form-control" id="book-object" value="@bookid" hidden>
+    </div>
+    <div class="form-group">
+        <label asp-for="CustomerId" class="control-label">Select Customer:</label>
+        <select asp-for="CustomerId" class="form-control" id="customer-select"></select>
+    </div>
+    <div class="form-group">
+        <label asp-for="CheckOutDate" class="control-label">Check-out Tarihi:</label>
+        <input type="datetime-local" asp-for="CheckOutDate" class="form-control" id="date-select">
+    </div>
+   
+
+    <div class="form-group">
+        <input type="submit" value="CreateCheckout" class="btn btn-primary" />
+    </div>
+</form>
+
+
+@section Scripts {
+
+    <script>
+       
+
+        $(document).ready(function () {
+            
+
+
+
+            $.get("/Customer/GetAll", function (data) {
+                $.each(data, function (index, value) {
+                    $('#customer-select').append('<option value="' + value.Id + '">' + value.firstName + " " + value.lastName + '</option>');
+                });
+            });
+
+            $.get("/Book/GetById/" + @bookid, function (data) {
+                $('#book-select').val(data.title);
+                
+            });
+
+
+            const currentDate = new Date();
+            const dateString = currentDate.toISOString().slice(0, 10);
+            $("#date-select").attr("min", dateString);
+
+
+            });
+        
+       
+
+
+    </script>
+
+
+}
