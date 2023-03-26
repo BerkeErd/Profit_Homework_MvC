@@ -2,22 +2,30 @@
 
 namespace Profit_Homework_MvC.Models
 {
-	public class Checkout : BaseEntity
-	{
+    public class Checkout : BaseEntity
+    {
+        private DateTime _checkOutDate;
 
-        public Checkout()
+       
+        public DateTime CheckOutDate
         {
-            ExpectedReturnDate = CheckOutDate.AddDays(15);
-		}	
+            get { return _checkOutDate; }
+            set
+            {
+                _checkOutDate = value;
 
-		public DateOnly CheckOutDate { get; set; } = DateOnly.FromDateTime(DateTime.Now);
-		public DateOnly ExpectedReturnDate { get; set; } 
+                ExpectedReturnDate = _checkOutDate.AddDays(15);
+            }
+        }
 
-		public Book Book { get; set; }
+        public DateTime ExpectedReturnDate { get; set; }
 
-		public int BookId { get; set; }
-		public Customer Customer { get; set; }
+        public Book Book { get; set; }
 
-		public int CustomerId { get; set; }
-	}
+        public int BookId { get; set; }
+
+        public Customer Customer { get; set; }
+
+        public int CustomerId { get; set; }
+    }
 }

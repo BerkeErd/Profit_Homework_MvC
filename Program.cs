@@ -4,8 +4,17 @@ using Profit_Homework_MvC.Repository;
 using Profit_Homework_MvC.Repository.BookRepo;
 using Profit_Homework_MvC.Repository.CheckoutRepo;
 using Profit_Homework_MvC.Repository.CustomerRepo;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
+
+var logger = new LoggerConfiguration()
+	.ReadFrom.Configuration(builder.Configuration)
+	.Enrich.FromLogContext()
+	.CreateLogger();
+
+builder.Logging.ClearProviders();
+builder.Logging.AddSerilog(logger);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();

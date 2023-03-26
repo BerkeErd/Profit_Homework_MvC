@@ -16,6 +16,7 @@ namespace Profit_Homework_MvC.Models
 
 		public bool IsCheckedOut { get; set; }
 
-		
+
+
 	}
 }

@@ -6,8 +6,10 @@ namespace Profit_Homework_MvC.Repository.CustomerRepo
 {
 	public class CustomerRepo : GenericRepository<Customer>, ICustomerRepo
 	{
-		public CustomerRepo(Appdbcontext appdbcontext) : base(appdbcontext)
-		{
-		}
-	}
+
+        public CustomerRepo(Appdbcontext appdbcontext, ILogger<CustomerRepo> logger) : base(appdbcontext, logger)
+        {
+
+        }
+    }
 }

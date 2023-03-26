@@ -3,7 +3,7 @@
     ViewData["Title"] = "Kitaplar";
 }
 <h1 style="text-align: center">Kitap Listesi</h1>
-<table id="bookDataTable" class="display" cellspacing="0" width="100%">
+<table id="bookDataTable" class="display table table-dark" cellspacing="0" width="100%">
     <thead>
     </thead>
 
@@ -32,13 +32,17 @@
 
                 if (book.IsCheckedOut)
                 {
-                    buttonsHtml = "<a value='" + book.Id + "' href='/Checkin' id='btnCheckIn' class='btn btn-primary'>Check-IN</a><button id='btnDetails' class='btn btn-primary'>Detay</button>";
+                    buttonsHtml = "<a value='" + book.Id + "' href='/Checkout/CheckInView/" + book.Id + "' id='btnCheckIn' class='btn btn-success'>Check-in</a> <button value='" + book.Id + "' ' href='/Checkout/Details' class='btn btn-info btnDetails ml-5'>Detay</button>";
                 }
                 else
                 {
-                    buttonsHtml = "<a id='btnCheckOut'value='" + book.Id + "' href='/Checkout/Index/" +book.Id+"' class='btn btn-primary'>Check-OUT</a>";
+
+                    buttonsHtml = "<a id='btnCheckOut'value='" + book.Id + "' href='/Checkout/Index/" + book.Id + "' class='btn btn-success'>Check-out</a>";
+                    
+                    
                 }
-                @:bookData.push(["@book.Title", "@book.PublishDate", "@book.Price".toString()+" TL", "@Html.Raw(buttonsHtml)"]);
+                @:bookData.push(["@book.Title", "@book.PublishDate.ToString("yyyy")", "@book.Price".toString() + " TL", "@Html.Raw(buttonsHtml)"]);
+
 
             }
         }
@@ -54,10 +58,10 @@
                     ],
                     responsive: true
                 });
-                $('#telId').mask('+90 000 000 00 00');
+               
 
                 $('#createCustomerForm').submit(function (e) {
-                    e.preventDefault();
+                   
                     $.ajax({
                         url: '/Customer/CreateCustomer',
                         type: 'POST',
@@ -71,11 +75,99 @@
                     });
                 });
 
-               
+
+                $(".btnDetails").click(function() {
+
+                    var bookID = $(this).val();
+                    
+                    $.get("/Book/GetById/"+bookID, function (data) {
+                        //console.log(data);
+
+                        
+                        }).done(function(data){
+
+
+                       
+
+                        $.get("/Checkout/GetByBookId/id?id="+ data.id, function (checkout) {
+                            
+                        }).done(function (checkout) {
+
+                            $.get("/Checkout/GetCustomerWithCheckoutId/id?id=" + checkout.id, function (dataTwo) {
+
+                                console.log(dataTwo);
+                                var htmlText = '<b>Kitap Adı: </b>' + data.title + '<br>' + '<b>Kitap ISBN: </b>' + data.isbn + '<br>' + '<b>Kitap Fiyatı: </b>' + data.price + ' TL<br>' + '<b>Kitap Yayın Yılı: </b>' + new Date(data.publishDate).getFullYear();
+
+                                if (data.isCheckedOut) {
+
+                                    htmlText += '<br>' + '<b>Kitap Durumu: Mevcut Değil </b>' + '<br>' + '<b>Kiralayan Kişi: </b>' + dataTwo.firstName +" " + dataTwo.lastName + '<br>' + '<b>İşlem Tarihi: </b>' + checkout.checkOutDate;
+                                }
+                                else {
+                                    htmlText += '<br>' + '<b>Kitap Durumu: Mevcut</b>';
+                                }
+
+                                Swal.fire({
+                                    title: 'Details',
+                                    html: htmlText,
+                                    confirmButtonText: 'Close',
+                                });
+                            })
+
+                           
+                           });
+
+                            
+
+
+                      
+                    });
+                        
+                   
+                });
+
+
+                $("#createCustomerForm").validate({
+                    rules: {
+                        "FirstName": { required: true },
+                        "LastName": { required: true },
+                        "PhoneNum": {
+                            required: true,
+                            maxlength: 12,
+                            minlength: 12
+                        },
+                        "IdNumber": {
+                            required: true,
+                            number: true,
+                            minlength: 11,
+                            maxlength: 11
+                        }
+                    },
+                    messages: {
+                        FirstName:'<p class="text-danger">Lütfen isim giriniz.</p>',
+                        LastName: '<p class="text-danger">Lütfen soyisim giriniz.</p>',
+                        PhoneNum: '<p class="text-danger">Lütfen geçerli telefon numarası giriniz.</p>',
+                        IdNumber: '<p class="text-danger">Lütfen geçerli TC Kimlik numarası giriniz.</p>'
+                    }
+                           
+                });
+                
+                $('#btnAddCustomer').click(function () {
+                    $("#createCustomerForm").valid();
+                });
+
+
+
+                $.validator.addMethod("PhoneNum", function (phoneNumber, element) {
+                    return phoneNumber.match(/^\+[1-9]{2}-[0-9]{3}-[0-9]{3}-[0-9]{4}$/)
+                });
+                $(".phone").mask("999-999-9999", { autoclear: false });
+
             });
 
 
 
     </script>
+
+   
 
 }

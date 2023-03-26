@@ -9,9 +9,12 @@ namespace Profit_Homework_MvC.Controllers
     {
        private readonly ICustomerRepo _customerRepo;
 
-        public CustomerController(ICustomerRepo customerRepo)
+       private readonly ILogger<CustomerController> _logger;
+        public CustomerController(ICustomerRepo customerRepo, ILogger<CustomerController> logger)
         {
             _customerRepo = customerRepo;
+            _logger = logger;
+
         }
         public IActionResult Index()
         {
@@ -28,12 +31,13 @@ namespace Profit_Homework_MvC.Controllers
         {
             try
             {
+                _logger.LogInformation("Deneme");
                 _customerRepo.Add(customer);
                 return Ok("Customer Created");
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                //log
+                _logger.LogInformation(e.Message);
                 throw;
             }
             
@@ -42,7 +46,16 @@ namespace Profit_Homework_MvC.Controllers
         [HttpGet]
         public List<Customer> GetAll()
         {
-            return _customerRepo.GetAll();
+            try
+            {
+                return _customerRepo.GetAll();
+            }
+            catch (Exception e)
+            {
+                _logger.LogInformation(e.Message);
+                throw;
+            }
+            
         }
     }
 }

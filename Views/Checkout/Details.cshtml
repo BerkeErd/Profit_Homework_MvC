@@ -3,9 +3,9 @@
 @{
     var bookid = ViewBag.BookId;
 }
-<h2>Checkout Book</h2>
+<h2>Check-in Book</h2>
 
-<form asp-action="CreateCheckout">
+<form asp-action="Checkin">
     <div class="form-group">
         <label asp-for="Book" class="control-label">Selected Book:</label>
         <input class="form-control" id="book-select" disabled>
@@ -16,13 +16,13 @@
         <select asp-for="CustomerId" class="form-control" id="customer-select"></select>
     </div>
     <div class="form-group">
-        <label asp-for="CheckOutDate" class="control-label">Check-out Tarihi:</label>
-        <input type="date" asp-for="CheckOutDate" class="form-control" id="date-select">
+        <label asp-for="ExpectedReturnDate" class="control-label">Beklenen Geri Getirme Tarihi:</label>
+        <input type="datetime-local" asp-for="ExpectedReturnDate" class="form-control" id="date-select" readonly>
     </div>
-   
+
 
     <div class="form-group">
-        <button type="submit" value="CreateCheckout" class="btn btn-success mt-2" />Kitabı Al</button>
+        <input type="submit" value="CreateCheckout" class="btn btn-primary" />
     </div>
 </form>
 
@@ -30,10 +30,10 @@
 @section Scripts {
 
     <script>
-       
+
 
         $(document).ready(function () {
-            
+
 
 
 
@@ -45,19 +45,16 @@
 
             $.get("/Book/GetById/" + @bookid, function (data) {
                 $('#book-select').val(data.title);
-                
-            });
-
-
-            const currentDate = new Date();
-            const dateString = currentDate.toISOString().slice(0, 10);
-
-            //$("#date-select").attr("min", dateString);
-
 
             });
-        
-       
+
+
+            $("#ExpectedReturnDate").set(@Model.)
+
+
+        });
+
+
 
 
     </script>

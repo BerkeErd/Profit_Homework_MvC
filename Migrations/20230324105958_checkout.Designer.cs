@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Profit_Homework_MvC.Data;
 
@@ -11,9 +12,11 @@ using Profit_Homework_MvC.Data;
 namespace Profit_Homework_MvC.Migrations
 {
     [DbContext(typeof(Appdbcontext))]
-    partial class AppdbcontextModelSnapshot : ModelSnapshot
+    [Migration("20230324105958_checkout")]
+    partial class checkout
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -63,18 +66,19 @@ namespace Profit_Homework_MvC.Migrations
                     b.Property<int>("BookId")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("CheckOutDate")
-                        .HasColumnType("datetime2");
+                    b.Property<DateOnly>("CheckOutDate")
+                        .HasColumnType("date");
 
                     b.Property<int>("CustomerId")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("ExpectedReturnDate")
-                        .HasColumnType("datetime2");
+                    b.Property<DateOnly>("ExpectedReturnDate")
+                        .HasColumnType("date");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("BookId");
+                    b.HasIndex("BookId")
+                        .IsUnique();
 
                     b.HasIndex("CustomerId");
 
@@ -113,8 +117,8 @@ namespace Profit_Homework_MvC.Migrations
             modelBuilder.Entity("Profit_Homework_MvC.Models.Checkout", b =>
                 {
                     b.HasOne("Profit_Homework_MvC.Models.Book", "Book")
-                        .WithMany()
-                        .HasForeignKey("BookId")
+                        .WithOne("Checkout")
+                        .HasForeignKey("Profit_Homework_MvC.Models.Checkout", "BookId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -127,6 +131,11 @@ namespace Profit_Homework_MvC.Migrations
                     b.Navigation("Book");
 
                     b.Navigation("Customer");
+                });
+
+            modelBuilder.Entity("Profit_Homework_MvC.Models.Book", b =>
+                {
+                    b.Navigation("Checkout");
                 });
 #pragma warning restore 612, 618
         }

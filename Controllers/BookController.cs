@@ -7,20 +7,48 @@ namespace Profit_Homework_MvC.Controllers
 	public class BookController : Controller
 	{
 		private readonly IBookRepository _bookRepository;
-        public BookController(IBookRepository bookRepository)
+
+        private readonly ILogger<BookController> _logger;
+        public BookController(IBookRepository bookRepository, ILogger<BookController> logger)
         {
 			_bookRepository = bookRepository;
+            _logger = logger;
 		}
         public IActionResult Index()
         {
-            var data = _bookRepository.GetAll();
-            return View(data);
+            try
+            {
+                var data = _bookRepository.GetAll();
+                return View(data);
+            }
+            catch (Exception e)
+            {
+                _logger.LogInformation(e.Message);
+                throw;
+            }
+          
         }
 
+        [HttpGet]
         public Book GetById(int id) 
         {
-           return _bookRepository.GetById(id);
+            try
+            {
+                return _bookRepository.GetById(id);
+            }
+            catch (Exception e)
+            {
+                _logger.LogInformation(e.Message);
+                throw;
+            }
+           
         
         }
+
+        //[HttpGet]
+        ////public Checkout GetCheckout(int id)
+        ////{
+            
+        ////}
     }
 }

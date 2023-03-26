@@ -1,0 +1,113 @@
+﻿@model Checkout
+
+@{
+    var bookid = ViewBag.BookId;
+}
+<h2>Check-in Book</h2>
+
+<form asp-action="Checkin">
+    <div class="form-group">
+        <label class="control-label">Selected Book:</label>
+        <input class="form-control" id="book-select" readonly>
+        <input asp-for="BookId" class="form-control" id="book-object" value="@bookid" hidden>
+        <input asp-for="Id" class="form-control" id="checkout-object" value="" hidden>
+    </div>
+    <div class="form-group">
+        <label  class="control-label">Customer:</label>
+        <select class="form-control" id="customer-select" disabled></select>
+    </div> 
+    <div class="form-group">
+        <label class="control-label">Bugünün Tarihi:</label>
+        <input type="text" class="form-control" id="date-today" readonly>
+    </div>
+    <div class="form-group">
+        <label  class="control-label">Beklenen Geri Getirme Tarihi:</label>
+        <input type="text" class="form-control" id="date-select" readonly>
+    </div>
+    <div class="form-group">
+        <label class="control-label">Ödenecek Ücret:</label>
+        <input type="text" class="form-control" id="totalPrice" readonly>   
+    </div>
+
+
+    <div class="form-group">
+        <input type="submit" value="Checkin" class="btn btn-primary" />
+    </div>
+</form>
+
+
+@section Scripts {
+
+    <script>
+
+
+        $(document).ready(function () {
+
+            
+
+
+            $.get("/Customer/GetAll", function (data) {
+                $.each(data, function (index, value) {
+                    $('#customer-select').append('<option value="' + value.id + '">' + value.firstName + " " + value.lastName + '</option>');
+                });
+            });
+
+            $.get("/Book/GetById/" + @bookid, function (data) {
+                $('#book-select').val(data.title);
+
+            }).done(function(data){
+                $.get("/Checkout/GetByBookId/id?id=" + @bookid, function (checkout) {
+
+                    $("#checkout-object").val(checkout.id);
+
+                    $("#date-select").val(checkout.expectedReturnDate);
+                    console.log(data);
+
+                    var today = new Date(); // Current date and time
+                    var expectedReturnDate = new Date(checkout.expectedReturnDate); // Date and time from the checkout object
+
+                    if (today <= expectedReturnDate) {
+                        $("#totalPrice").val("Kitabın ücreti "+ data.price + "TL");
+                    }
+                    else {
+                        var extraDays = Math.round((today - expectedReturnDate) / (1000 * 60 * 60 * 24)); // Calculate the number of extra days
+                        var totalPrice = data.price + (extraDays * 5);
+                        $("#totalPrice").val("Kitabın ücreti " + totalPrice + "TL ( Geciktirilen gün sayısı: "+extraDays+ "gün )" );
+                    }
+                });
+            });
+
+
+           
+
+            $('#date-today').val(Today());
+
+          
+
+           
+        });
+
+
+
+
+
+
+
+
+
+
+        function Today()
+        {
+            var now = new Date();
+            var month = (now.getMonth() + 1).toString().padStart(2, '0');
+            var day = now.getDate().toString().padStart(2, '0');
+            var year = now.getFullYear();
+            var datetime = year + '-' + month + '-' + day;
+            return datetime;
+        }
+
+
+    </script>
+
+
+}
