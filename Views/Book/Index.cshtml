@@ -95,7 +95,7 @@
 
                             $.get("/Checkout/GetCustomerWithCheckoutId/id?id=" + checkout.id, function (dataTwo) {
 
-                                console.log(dataTwo);
+                               // console.log(dataTwo);
                                 var htmlText = '<b>Kitap Adı: </b>' + data.title + '<br>' + '<b>Kitap ISBN: </b>' + data.isbn + '<br>' + '<b>Kitap Fiyatı: </b>' + data.price + ' TL<br>' + '<b>Kitap Yayın Yılı: </b>' + new Date(data.publishDate).getFullYear();
 
                                 if (data.isCheckedOut) {

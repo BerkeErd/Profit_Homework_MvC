@@ -1,23 +1,31 @@
 ﻿@model Customer
 
-<form id="createCustomerForm">
-    
-    <div class="form-group">
-        <h1 style="text-align: center">Müşteri Ekle</h1>
-        <label for="FirstName">İsim:</label>
-        <input type="text" class="form-control" asp-for="FirstName" >
-    </div
-    ><div class="form-group">
-        <label for="LastName">Soyisim:</label>
-        <input type="text" class="form-control" asp-for="LastName" >
-    </div>
-    <div class="form-group">
-        <label for="PhoneNum">Telefon Numarası:</label>
-        <input type="text" minlength="17" class="form-control phone col-xs-3" asp-for="PhoneNum" required />
-    </div>
-    <div class="form-group">
-        <label for="IdNumber">TC Kimlik Numarası:</label>
-        <input type="text" minlength="11" maxlength="11" class="form-control" asp-for="IdNumber" required>
-    </div>
-    <button id="btnAddCustomer" type="submit" class="btn btn-success mt-2">Kayıt Et</button>
-</form>
+
+
+ @if (User.IsInRole("Admin"))
+{
+    <form id="createCustomerForm">
+
+        <div class="form-group">
+            <h1 style="text-align: center">Müşteri Ekle</h1>
+            <label for="FirstName">İsim:</label>
+            <input type="text" class="form-control" asp-for="FirstName">
+        </div><div class="form-group">
+            <label for="LastName">Soyisim:</label>
+            <input type="text" class="form-control" asp-for="LastName">
+        </div>
+        <div class="form-group">
+            <label for="PhoneNum">Telefon Numarası:</label>
+            <input type="text" minlength="17" class="form-control phone col-xs-3" asp-for="PhoneNum" required />
+        </div>
+        <div class="form-group">
+            <label for="IdNumber">TC Kimlik Numarası:</label>
+            <input type="text" minlength="11" maxlength="11" class="form-control" asp-for="IdNumber" required>
+        </div>
+        <button id="btnAddCustomer" type="submit" class="btn btn-success mt-2">Kayıt Et</button>
+    </form>
+}
+else
+{
+    <p> Hoşgeldiniz. </p>
+}

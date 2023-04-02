@@ -1,5 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Profit_Homework_MvC.Migrations;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+//using Profit_Homework_MvC.Migrations;
 using Profit_Homework_MvC.Models;
 using Profit_Homework_MvC.Repository.BookRepo;
 using Profit_Homework_MvC.Repository.CheckoutRepo;
@@ -7,6 +8,7 @@ using Profit_Homework_MvC.Repository.CustomerRepo;
 
 namespace Profit_Homework_MvC.Controllers
 {
+    [Authorize]
     public class CheckoutController : Controller
     {
         private readonly ICheckoutRepository _checkoutRepository;

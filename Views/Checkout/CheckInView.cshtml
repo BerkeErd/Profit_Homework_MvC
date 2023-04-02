@@ -63,14 +63,14 @@
                     $("#date-select").val(checkout.expectedReturnDate);
                     console.log(data);
 
-                    var today = new Date(); // Current date and time
-                    var expectedReturnDate = new Date(checkout.expectedReturnDate); // Date and time from the checkout object
+                    var today = new Date(); 
+                    var expectedReturnDate = new Date(checkout.expectedReturnDate); 
 
                     if (today <= expectedReturnDate) {
                         $("#totalPrice").val("Kitabın ücreti "+ data.price + "TL");
                     }
                     else {
-                        var extraDays = Math.round((today - expectedReturnDate) / (1000 * 60 * 60 * 24)); // Calculate the number of extra days
+                        var extraDays = Math.round((today - expectedReturnDate) / (1000 * 60 * 60 * 24)); 
                         var totalPrice = data.price + (extraDays * 5);
                         $("#totalPrice").val("Kitabın ücreti " + totalPrice + "TL ( Geciktirilen gün sayısı: "+extraDays+ "gün )" );
                     }

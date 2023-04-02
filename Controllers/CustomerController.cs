@@ -1,10 +1,13 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Profit_Homework_MvC.Models;
 using Profit_Homework_MvC.Repository.BookRepo;
 using Profit_Homework_MvC.Repository.CustomerRepo;
+using System.Data;
 
 namespace Profit_Homework_MvC.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class CustomerController : Controller
     {
        private readonly ICustomerRepo _customerRepo;
@@ -23,7 +26,7 @@ namespace Profit_Homework_MvC.Controllers
 
         public IActionResult CreateCustomerView()
         {
-            return PartialView();
+           return PartialView();
         }
 
         [HttpPost]
@@ -43,6 +46,7 @@ namespace Profit_Homework_MvC.Controllers
             
         }
 
+        [AllowAnonymous]
         [HttpGet]
         public List<Customer> GetAll()
         {

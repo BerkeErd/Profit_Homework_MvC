@@ -1,4 +1,5 @@
-﻿using Profit_Homework_MvC.Data;
+﻿using Profit_Homework_MvC.CacheHelper;
+using Profit_Homework_MvC.Data;
 using Profit_Homework_MvC.Models;
 
 namespace Profit_Homework_MvC.Repository.CheckoutRepo
@@ -6,7 +7,7 @@ namespace Profit_Homework_MvC.Repository.CheckoutRepo
 	public class CheckoutRepository : GenericRepository<Checkout>, ICheckoutRepository
 	{
 
-        public CheckoutRepository(Appdbcontext appdbcontext, ILogger<CheckoutRepository> logger) : base(appdbcontext, logger)
+        public CheckoutRepository(Appdbcontext appdbcontext, ILogger<CheckoutRepository> logger, Func<CacheTech, ICacheService> cacheService) : base(appdbcontext, logger, cacheService)
         {
            
         }

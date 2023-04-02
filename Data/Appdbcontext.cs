@@ -1,10 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Profit_Homework_MvC.Models;
 using System;
 
 namespace Profit_Homework_MvC.Data
 {
-	public class Appdbcontext : DbContext
+	public class Appdbcontext : IdentityDbContext
 	{
 		public Appdbcontext(DbContextOptions<Appdbcontext> options) : base(options)
 		{

@@ -1,9 +1,14 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.DependencyInjection;
 using Profit_Homework_MvC.Models;
 using Profit_Homework_MvC.Repository.BookRepo;
+using Profit_Homework_MvC.Services;
 
 namespace Profit_Homework_MvC.Controllers
 {
+  
 	public class BookController : Controller
 	{
 		private readonly IBookRepository _bookRepository;
@@ -16,6 +21,8 @@ namespace Profit_Homework_MvC.Controllers
 		}
         public IActionResult Index()
         {
+           
+
             try
             {
                 var data = _bookRepository.GetAll();

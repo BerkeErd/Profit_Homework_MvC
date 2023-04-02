@@ -5,6 +5,17 @@ using Profit_Homework_MvC.Repository.BookRepo;
 using Profit_Homework_MvC.Repository.CheckoutRepo;
 using Profit_Homework_MvC.Repository.CustomerRepo;
 using Serilog;
+using Microsoft.AspNetCore.Identity;
+using System;
+using Profit_Homework_MvC.CacheHelper;
+using System.Configuration;
+using Hangfire;
+using System.Security.Claims;
+using Microsoft.Extensions.DependencyInjection;
+using Profit_Homework_MvC.Services;
+using Profit_Homework_MvC.Models;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,15 +27,59 @@ var logger = new LoggerConfiguration()
 builder.Logging.ClearProviders();
 builder.Logging.AddSerilog(logger);
 
+builder.Services.Configure<CacheConfiguration>(builder.Configuration.GetSection("CacheConfiguration"));
+
+
+builder.Services.AddMemoryCache();
+builder.Services.AddTransient<MemoryCacheService>();
+builder.Services.AddTransient<RedisCacheService>();
+builder.Services.AddTransient<Func<CacheTech, ICacheService>>(serviceProvider => key =>
+{
+    switch (key)
+    {
+        case CacheTech.Memory:
+            return serviceProvider.GetService<MemoryCacheService>();
+        case CacheTech.Redis:
+            return serviceProvider.GetService<RedisCacheService>();
+        default:
+            return serviceProvider.GetService<MemoryCacheService>();
+    }
+});
+
+builder.Services.AddHangfire(x => x.UseSqlServerStorage(builder.Configuration.GetConnectionString("DefaultConnection")));
+builder.Services.AddHangfireServer();
+
+builder.Services.AddRazorPages();
 // Add services to the container.
+
+
 builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<Appdbcontext>(options => options.UseSqlServer(
 			  builder.Configuration.GetConnectionString("DefaultConnection")
 			  ));
 
+builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>
+{
+    options.SignIn.RequireConfirmedAccount = false;
+})
+       .AddEntityFrameworkStores<Appdbcontext>();
+builder.Services.AddScoped<RoleManager<IdentityRole>>();
+
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.LoginPath = "/Identity/Account/Login";
+    options.AccessDeniedPath = "/Identity/Account/AccessDenied";
+    options.ReturnUrlParameter = "returnUrl";
+});
+
+
+
+
+
 builder.Services.AddScoped<IBookRepository, BookRepository>();
 builder.Services.AddScoped<ICheckoutRepository, CheckoutRepository>();
 builder.Services.AddScoped<ICustomerRepo, CustomerRepo>();
+builder.Services.AddScoped<AdminRoleService>();
 builder.Services.AddScoped(typeof(IRepository<>), typeof(GenericRepository<>));
 
 var app = builder.Build();
@@ -37,15 +92,21 @@ if (!app.Environment.IsDevelopment())
 	app.UseHsts();
 }
 
+
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
+app.UseAuthentication();
 
 app.UseAuthorization();
+
+app.UseHangfireDashboard("/jobs");
 
 app.MapControllerRoute(
 	name: "default",
 	pattern: "{controller=Book}/{action=Index}/{id?}");
+
+app.MapRazorPages();
 
 app.Run();
