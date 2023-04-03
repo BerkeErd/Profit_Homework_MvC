@@ -16,6 +16,8 @@ using Profit_Homework_MvC.Services;
 using Profit_Homework_MvC.Models;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using StackExchange.Redis;
+using Microsoft.AspNetCore.Identity.UI.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -32,7 +34,7 @@ builder.Services.Configure<CacheConfiguration>(builder.Configuration.GetSection(
 
 builder.Services.AddMemoryCache();
 builder.Services.AddTransient<MemoryCacheService>();
-builder.Services.AddTransient<RedisCacheService>();
+//builder.Services.AddTransient<RedisCacheService>();
 builder.Services.AddTransient<Func<CacheTech, ICacheService>>(serviceProvider => key =>
 {
     switch (key)
@@ -60,9 +62,10 @@ builder.Services.AddDbContext<Appdbcontext>(options => options.UseSqlServer(
 
 builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>
 {
-    options.SignIn.RequireConfirmedAccount = false;
-})
-       .AddEntityFrameworkStores<Appdbcontext>();
+    options.SignIn.RequireConfirmedAccount = true;
+}).AddDefaultUI()
+  .AddDefaultTokenProviders()
+  .AddEntityFrameworkStores<Appdbcontext>();
 builder.Services.AddScoped<RoleManager<IdentityRole>>();
 
 builder.Services.ConfigureApplicationCookie(options =>
@@ -73,8 +76,11 @@ builder.Services.ConfigureApplicationCookie(options =>
 });
 
 
+//IConfiguration configuration = builder.Configuration;
+//var multiplexer = ConnectionMultiplexer.Connect(configuration.GetConnectionString("Redis"));
+//builder.Services.AddSingleton<IConnectionMultiplexer>(multiplexer);
 
-
+//builder.Services.AddSingleton<ICacheService, RedisCacheService>();
 
 builder.Services.AddScoped<IBookRepository, BookRepository>();
 builder.Services.AddScoped<ICheckoutRepository, CheckoutRepository>();

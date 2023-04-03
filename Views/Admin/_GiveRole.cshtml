@@ -1,0 +1,28 @@
+﻿@using Microsoft.AspNetCore.Identity;
+
+@model List<IdentityRole>
+
+
+
+<div class="row justify-content-center my-5">
+    <div class="col-sm-12 col-md-6">
+        <h4>Give Role</h4>
+        <hr>
+        <form asp-action="GiveRole" method="post">
+            <div class="form-group">
+                <label for="roleName">Role:</label>
+                <select class="form-control" name="roleName">
+                    @foreach (var role in Model)
+                    {
+                        <option value="@role.Name">@role.Name</option>
+                    }
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="email">Email:</label>
+                <input class="form-control form-control-sm" type="email" name="email" required />
+            </div>
+            <button type="submit" class="btn btn-primary mt-3">Give Role</button>
+        </form>
+    </div>
+</div>

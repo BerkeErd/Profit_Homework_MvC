@@ -27,7 +27,30 @@ namespace Profit_Homework_MvC.CacheHelper
 
         }
 
+        public Task Clear(string key)
+        {
+            throw new NotImplementedException();
+        }
 
+        public void ClearAll()
+        {
+            throw new NotImplementedException();
+        }
+
+        public T GetOrAdd<T>(string key, Func<T> action) where T : class
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<T> GetOrAddAsync<T>(string key, Func<Task<T>> action) where T : class
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<string> GetValueAsync(string key)
+        {
+            throw new NotImplementedException();
+        }
 
         public void Remove(string cacheKey)
         {
@@ -37,6 +60,11 @@ namespace Profit_Homework_MvC.CacheHelper
         public T Set<T>(string cacheKey, T value)
         {
             return _memoryCache.Set(cacheKey, value, _cacheCacheEntryOptions);
+        }
+
+        public Task<bool> SetValueAsync(string key, string value)
+        {
+            throw new NotImplementedException();
         }
 
         public bool TryGet<T>(string cacheKey, out T value)

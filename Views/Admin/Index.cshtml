@@ -1,0 +1,25 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-sm-12 col-md-6">
+            <h4>Add Role</h4>
+            <hr>
+            <form asp-action="AddRole" method="post">
+                <div class="form-group">
+                    <label for="role">Role Name:</label>
+                    <input class="form-control form-control-sm" type="text" name="role" required placeholder="Enter role name">
+                </div>
+                <button type="submit" class="btn btn-primary mt-3">Add Role</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<partial name="_GiveRole"/>
+
+

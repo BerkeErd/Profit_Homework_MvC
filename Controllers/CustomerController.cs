@@ -21,6 +21,7 @@ namespace Profit_Homework_MvC.Controllers
         }
         public IActionResult Index()
         {
+
             return View();
         }
 
