@@ -18,6 +18,8 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using StackExchange.Redis;
 using Microsoft.AspNetCore.Identity.UI.Services;
+using Profit_Homework_MvC.Config;
+using Profit_Homework_MvC.Customs;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -54,6 +56,12 @@ builder.Services.AddHangfireServer();
 builder.Services.AddRazorPages();
 // Add services to the container.
 
+//builder.Services.AddScoped<AuthenticatorService>();
+
+var emailSenderConfig = builder.Configuration.GetSection("EmailSender").Get<EmailConfig>();
+
+builder.Services.AddSingleton(emailSenderConfig);
+builder.Services.AddTransient<IEmailSender, CustomEmailSender>();
 
 builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<Appdbcontext>(options => options.UseSqlServer(
